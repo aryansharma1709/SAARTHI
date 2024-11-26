@@ -1,5 +1,7 @@
 import logo from './assets/Saarthi_logo_1.png'
 import { Link } from "react-router-dom";
+import MessagingCircle from "./MessagingCircle"
+import Book from "./Book"
 export default function Navbar(){
     return  (
     <>
@@ -16,14 +18,14 @@ export default function Navbar(){
           <div className="flex space-x-4">
              {/* <Link to="/home" className="flex items-center space-x-1 hover:text-blue-500">
         <Home size={20} /> <span>Home</span>
-      </Link>
+      </Link> */}
       <Link to="/messaging" className="flex items-center space-x-1 hover:text-blue-500">
-        <MessageCircle size={20} /> <span>Inbox</span>
+         <span>Inbox</span>
       </Link>
       <Link to="/resources" className="flex items-center space-x-1 hover:text-blue-500">
-        <Book size={20} /> <span>Study Resources</span>
+         <span>Study Resources</span>
       </Link>
-      <Link to="/dashboard" className="flex items-center space-x-1 hover:text-blue-500">
+      {/* <Link to="/dashboard" className="flex items-center space-x-1 hover:text-blue-500">
         <Layout size={20} /> <span>Dashboard</span>
       </Link> */}
           </div>

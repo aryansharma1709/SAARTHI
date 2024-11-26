@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-const BannerSlider = () => {
+import { useState, useEffect } from 'react';
+import banner1 from './assets/Website_banner_1.png';
+import banner2 from './assets/Website_store_banner.png';
+import banner3 from './assets/Website_News_feed.png';
+  export default function BannerSlide() {
 const banners = [
-    { image: "/api/placeholder/1200/400", title: "Empowering Education" },
-    { image: "/api/placeholder/1200/400", title: "Connect with Alumni" },
-    { image: "/api/placeholder/1200/400", title: "Learn from Experts" }
+    { image: banner1, title: "Empowering Education" },
+    { image: banner2, title: "Saarthi store" },
+    { image: banner3, title: "Market News" }
   ];
   const [currentBanner, setCurrentBanner] = useState(0);
 
@@ -35,4 +38,4 @@ const banners = [
       ))}
     </div>
   );
-};
+}
