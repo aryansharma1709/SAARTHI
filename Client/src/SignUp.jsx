@@ -1,47 +1,90 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
   GoogleAuthProvider, 
-  signInWithPopup 
+  signInWithPopup,
+  updateProfile
 } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import app from "../firebase";
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
+  const db = getFirestore(app);
 
-  const handleSignup = (e) => {
+  const saveUserToFirestore = async (userId, userData) => {
+    try {
+      await setDoc(doc(db, "users", userId), {
+        ...userData,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error saving user data:", error);
+      throw error;
+    }
+  };
+
+  const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
-        setSuccess("Account created successfully!");
-      })
-      .catch((err) => {
-        setError(err.message);
+    try {
+      // Create authentication user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Update auth profile with display name
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`
       });
+
+      // Prepare user data for Firestore
+      const userData = {
+        firstName,
+        lastName,
+        email,
+        displayName: `${firstName} ${lastName}`,
+        authProvider: "email",
+        emailVerified: userCredential.user.emailVerified,
+      };
+
+      // Save user data to Firestore
+      await saveUserToFirestore(userCredential.user.uid, userData);
+      
+      console.log("User created successfully:", userCredential);
+      setSuccess("Account created successfully!");
+      navigate('/login');
+    } catch (err) {
+      console.error("Signup error:", err);
+      setError(err.message);
+    }
   };
 
-  const handleGoogleSignIn = () => {
-    setError("");
-    setSuccess("");
-
-    signInWithPopup(auth, provider)
-      .then((result) => {
+function googleLogin() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider).then(async (result) => {
+        console.log(result);
         const user = result.user;
-        setSuccess(`Welcome, ${user.displayName}!`);
-      })
-      .catch((err) => {
-        setError(err.message);
+        if (result.user) {
+          await setDoc(doc(db, "Users", user.uid), {
+            email: user.email,
+            firstName: user.displayName,
+            photo: user.photoURL,
+            lastName: "",
+          });
+          // window.location.href = "/profile";
+        }
       });
   };
 
@@ -52,6 +95,34 @@ const Signup = () => {
           Create an Account
         </h1>
         <form onSubmit={handleSignup} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-600">
+                First Name
+              </label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="First name"
+                required
+              />
+            </div>
+            <div>
+              <label className="block mb-2 text-sm font-medium text-gray-600">
+                Last Name
+              </label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Last name"
+                required
+              />
+            </div>
+          </div>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-600">
               Email
@@ -91,7 +162,7 @@ const Signup = () => {
           <span className="text-sm text-gray-500">or</span>
         </div>
         <button
-          onClick={handleGoogleSignIn}
+          onClick={googleLogin}
           className="flex items-center justify-center w-full py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none"
         >
           <svg
