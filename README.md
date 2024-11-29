@@ -77,7 +77,3 @@ SAARTHI/
 └── Server/
     └── ...
 ```
-
-
-
-**Made with ❤️ for connecting generations of learners**
