@@ -1,234 +1,129 @@
-// import React from 'react';
-// import { Calendar, MessageSquare, Heart, Clock } from 'lucide-react';
 
-// const NewsFeed = () => {
-//   const article = {
-//     "title": "New DEV Feature: Following Tab",
-//     "description": "Hey, there is a new feature on the home feed: a Following tab. The existing feed is now called...",
-//     "readable_publish_date": "Nov 21",
-//     "comments_count": 11,
-//     "positive_reactions_count": 99,
-//     "reading_time_minutes": 1,
-//     "tags": "meta, news",
-//     "user": {
-//       "name": "Ben Halpern",
-//       "profile_image": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1%2Ff451a206-11c8-4e3d-8936-143d0a7e65bb.png"
-//     },
-//     "organization": {
-//       "name": "The DEV Team"
-//     }
-//   };
+import  { useState, useEffect } from "react";
 
-//   return (
-//     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-//       <div className="p-6">
-//         {/* Author Info */}
-//         <div className="flex items-center mb-4">
-//           <img
-//             src={article.user.profile_image}
-//             alt={article.user.name}
-//             className="w-10 h-10 rounded-full"
-//           />
-//           <div className="ml-3">
-//             <p className="text-sm font-semibold text-gray-900">{article.user.name}</p>
-//             <p className="text-xs text-gray-600">{article.organization.name}</p>
-//           </div>
-//         </div>
+const NewsFeed = () => {
+  const [articles, setArticles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
-//         {/* Article Content */}
-//         <div className="mb-4">
-//           <h2 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600 cursor-pointer">
-//             {article.title}
-//           </h2>
-//           <p className="text-gray-600">
-//             {article.description}
-//           </p>
-//         </div>
+  const articlesPerPage = 20; // Number of articles per page
+  const totalArticles = 200; // Total number of articles (assumed from the API)
+  const totalPages = Math.ceil(totalArticles / articlesPerPage); // Total number of pages
 
-//         {/* Tags */}
-//         <div className="mb-4">
-//           {article.tags.split(', ').map((tag) => (
-//             <span
-//               key={tag}
-//               className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 hover:bg-gray-200 cursor-pointer"
-//             >
-//               #{tag}
-//             </span>
-//           ))}
-//         </div>
+  const demoImage =
+    "https://t4.ftcdn.net/jpg/03/08/69/75/360_F_308697506_9dsBYHXm9FwuW0qcEqimAEXUvzTwfzwe.jpg";
 
-//         {/* Metadata */}
-//         <div className="flex items-center justify-between text-sm text-gray-600">
-//           <div className="flex items-center space-x-4">
-//             <span className="flex items-center">
-//               <Calendar className="w-4 h-4 mr-1" />
-//               {article.readable_publish_date}
-//             </span>
-//             <span className="flex items-center">
-//               <Clock className="w-4 h-4 mr-1" />
-//               {article.reading_time_minutes} min read
-//             </span>
-//           </div>
-//           <div className="flex items-center space-x-4">
-//             <span className="flex items-center">
-//               <Heart className="w-4 h-4 mr-1" />
-//               {article.positive_reactions_count}
-//             </span>
-//             <span className="flex items-center">
-//               <MessageSquare className="w-4 h-4 mr-1" />
-//               {article.comments_count}
-//             </span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+  // Fetch articles for the current page
+  useEffect(() => {
+    const fetchArticles = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `https://dev.to/api/articles?page=${currentPage}&per_page=${articlesPerPage}`
+        );
+        const data = await response.json();
+        setArticles(data);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-// // export default NewsFeed;
-// import React from 'react';
-import { Calendar, MessageSquare, Heart, Clock } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+    fetchArticles();
+  }, [currentPage]);
 
-// Define TypeScript interface for props
-const NewsFeed = ({ 
-  title,
-  description,
-  readable_publish_date,
-  comments_count,
-  positive_reactions_count,
-  reading_time_minutes,
-  tags,
-  user,
-  organization,
-  url,
-  onArticleClick,
-  onTagClick,
-  onUserClick,
-  onOrganizationClick 
-}) => {
-  // Handle clicks with optional fallback to URL
-  const handleArticleClick = (e) => {
-    e.preventDefault();
-    if (onArticleClick) {
-      onArticleClick();
-    } else if (url) {
-      window.open(url, '_blank');
-    }
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
   };
 
-  const handleTagClick = (tag) => (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onTagClick) {
-      onTagClick(tag);
-    }
-  };
-
-  const handleUserClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onUserClick) {
-      onUserClick(user);
-    }
-  };
-
-  const handleOrganizationClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onOrganizationClick) {
-      onOrganizationClick(organization);
-    }
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-2xl font-semibold">Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <Card 
-      onClick={handleArticleClick}
-      className="max-w-2xl mx-auto hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-    >
-      <CardContent className="p-6">
-        {/* Author Info */}
-        <div className="flex items-center mb-4">
-          <img
-            src={user.profile_image}
-            alt={user.name}
-            className="w-10 h-10 rounded-full cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={handleUserClick}
-          />
-          <div className="ml-3">
-            <p 
-              className="text-sm font-semibold text-gray-900 hover:text-blue-600 cursor-pointer"
-              onClick={handleUserClick}
-            >
-              {user.name}
-            </p>
-            {organization && (
-              <p 
-                className="text-xs text-gray-600 hover:text-blue-600 cursor-pointer"
-                onClick={handleOrganizationClick}
-              >
-                {organization.name}
+    <div className="p-5 min-h-screen mt-16 w-4/5 mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-6">News Feed</h1>
+
+      {/* Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {articles.map((article) => (
+          <div
+            key={article.id}
+            className="bg-white shadow-md rounded-lg overflow-hidden transition-transform transform hover:scale-105"
+          >
+            <img
+              src={article.cover_image || demoImage}
+              alt={article.title}
+              className="w-full h-48 object-cover"
+            />
+            <div className="p-4">
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                {article.title}
+              </h2>
+              <p className="text-gray-600 text-sm">
+                {article.description || "No description available"}
               </p>
-            )}
+              <div className="flex items-center my-3">
+                <img
+                  src={article.user.profile_image_90}
+                  alt={article.user.name}
+                  className="w-10 h-10 rounded-full"
+                />
+                <div className="ml-3">
+                  <p className="text-gray-800 font-medium">{article.user.name}</p>
+                  <p className="text-gray-600 text-sm">@{article.user.username}</p>
+                </div>
+              </div>
+              <p className="text-gray-500 text-sm">
+                Published: {article.readable_publish_date}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {article.tag_list.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-3 py-1 text-xs font-semibold text-white bg-blue-500 rounded-full"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block mt-4 text-center text-white bg-blue-600 hover:bg-blue-700 font-medium py-2 rounded-lg"
+              >
+                Read More
+              </a>
+            </div>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* Article Content */}
-        <div className="mb-4">
-          <h2 className="text-xl font-bold text-gray-900 mb-2 hover:text-blue-600">
-            {title}
-          </h2>
-          <p className="text-gray-600 line-clamp-2">
-            {description}
-          </p>
-        </div>
-
-        {/* Tags */}
-        <div className="mb-4 flex flex-wrap gap-2">
-          {tags.split(', ').map((tag) => (
-            <Badge
-              key={tag}
-              variant="secondary"
-              className="hover:bg-gray-200 cursor-pointer transition-colors"
-              onClick={handleTagClick(tag)}
+      {/* Pagination Bar */}
+      <div className="flex justify-center items-center mt-8">
+        <nav className="flex space-x-2">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageClick(index + 1)}
+              className={`px-4 py-2 rounded-md ${
+                currentPage === index + 1
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
             >
-              #{tag}
-            </Badge>
+              {index + 1}
+            </button>
           ))}
-        </div>
-
-        {/* Metadata */}
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <div className="flex items-center space-x-4">
-            <span className="flex items-center">
-              <Calendar className="w-4 h-4 mr-1" />
-              {readable_publish_date}
-            </span>
-            <span className="flex items-center">
-              <Clock className="w-4 h-4 mr-1" />
-              {reading_time_minutes} min read
-            </span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button 
-              className="flex items-center hover:text-blue-600 transition-colors"
-              aria-label={`${positive_reactions_count} reactions`}
-            >
-              <Heart className="w-4 h-4 mr-1" />
-              {positive_reactions_count}
-            </button>
-            <button 
-              className="flex items-center hover:text-blue-600 transition-colors"
-              aria-label={`${comments_count} comments`}
-            >
-              <MessageSquare className="w-4 h-4 mr-1" />
-              {comments_count}
-            </button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </nav>
+      </div>
+    </div>
   );
 };
 
