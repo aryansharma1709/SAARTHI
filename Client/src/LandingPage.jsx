@@ -3,16 +3,17 @@ import { motion } from 'framer-motion';
 import {  CheckCircle, UserCheck } from 'lucide-react';
 import banner1 from './assets/Website_banner_1.png';
 import { useNavigate } from 'react-router-dom';
-
+import ayuimg from './assets/ayuimg.jpg';
+import aruimg from './assets/Aryan_photo.jpg';
+import resume from './assets/ATS_resume.png';
+import book from  './assets/book.png';
 const LandingPage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const banners = [
     banner1,
-    banner1,
-    banner1,
-    banner1,
-    
+    resume,
+    book,
   ];
 
   // Mentors State
@@ -20,17 +21,17 @@ const LandingPage = () => {
     {
       id: "monu123",
       name: "Monu Kumar",
-      skills: ["Web Development", "DSA"],
+      skills: ["Java", "DSA"],
       company: "Coding Blocks",
       experience: 8,
-      image: "/api/placeholder/200/200"
+      image: "https://images.codingblocks.com/img/mentor/Monu.png"
     },
     {
-      name: "Jane Smith",
-      skills: ["Python", "AI/ML"],
-      company: "Microsoft",
+      name: "Samarth vohra",
+      skills: ["MERN STACK", "Web Development"],
+      company: "Coding Blocks",
       experience: 6,
-      image: "/api/placeholder/200/200"
+      image: "https://tse2.mm.bing.net/th?id=OIP.IqiDm7McWYiMpN_DqE2jBQAAAA&pid=Api&P=0&h=180"
     }
   ];
 
@@ -38,14 +39,14 @@ const LandingPage = () => {
   const [currentReview, setCurrentReview] = useState(0);
   const reviews = [
     {
-      text: "Amazing learning experience!",
-      name: "Alice Johnson",
-      image: "/api/placeholder/150/150"
+      text: "Amazing learning experience with exploration and guidance from alumni mentors, making my educational journey inspiring and successful!",
+      name: "Aryan Sharma",
+      image: aruimg
     },
     {
-      text: "Incredible mentorship program!",
-      name: "Bob Williams",
-      image: "/api/placeholder/150/150"
+      text: "An incredible learning journey enriched by exploration and alumni mentors' guidance, making my path engaging and truly rewarding!",
+      name: "Ayushi Katroliya",
+      image: ayuimg
     }
   ];
 
@@ -94,7 +95,7 @@ const LandingPage = () => {
               className="bg-white shadow-lg rounded-lg p-6 flex items-center"
             >
               <img 
-                src="https://images.codingblocks.com/img/mentor/Monu.png" 
+                src={mentor.image} 
                 alt={mentor.name} 
                 className="w-24 h-24 rounded-full mr-6"
               />
@@ -135,7 +136,10 @@ const LandingPage = () => {
         <div>
           <h2 className="text-3xl font-bold mb-4">Seamless Resource Sharing</h2>
           <p className="text-gray-600">
-            Access comprehensive learning materials and collaborate effortlessly with our intuitive platform.
+          Discover an intuitive platform designed for seamless collaboration and resource sharing. 
+          Access comprehensive study materials, enhance learning, and connect effortlessly with peers. 
+          Simplify your academic journey with a user-friendly interface that fosters knowledge exchange, teamwork, 
+          and efficiency, empowering you to achieve your educational goals with ease and convenience.
           </p>
         </div>
       </motion.section>
@@ -178,7 +182,7 @@ const LandingPage = () => {
           className="flex flex-col items-center"
         >
           <img 
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtWLEqsiFnpcivOr46smZISEH8SpGCtM1Ffw&s"
+            src={reviews[currentReview].image}
             alt={reviews[currentReview].name}
             className="w-32 h-32 rounded-full mb-4"
           />
