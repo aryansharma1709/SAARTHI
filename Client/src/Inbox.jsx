@@ -17,7 +17,7 @@ const Inbox = () => {
     const messagesRef = ref(db, "messages");
     push(messagesRef, {
       sender: auth?.currentUser?.email || "monu123",
-      receiver: chat || "nitishsr14@gmail.com",
+      receiver: chat || "aryansharma22@gla.ac.in",
       text: message,
       timestamp: Date.now(),
     });
@@ -53,8 +53,8 @@ const Inbox = () => {
               .filter(
                 (msg) =>
                   (msg.sender === id &&
-                    msg.receiver === "nitishsr14@gmail.com") ||
-                  (msg.receiver === id && msg.sender === "nitishsr14@gmail.com")
+                    msg.receiver === "aryansharma22@gla.ac.in") ||
+                  (msg.receiver === id && msg.sender === "aryansharma22@gla.ac.in")
               )
           : [];
       }

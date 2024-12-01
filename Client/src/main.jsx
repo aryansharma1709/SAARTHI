@@ -11,12 +11,14 @@ import Book from './Book.jsx'
 import NewsFeed from './NewsFeed.jsx'
 import Inbox from './Inbox.jsx'
 import SetupVideo from './SetupVideo.jsx'
+import Footer from './Footer.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
     <Navbar/>
 
+      <div className="flex flex-col min-h-screen">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/inbox" element={<Inbox />} />
@@ -27,6 +29,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="resources" element={<Book />} />
         <Route path='/news-feed' element={<NewsFeed />} />
       </Routes>
+      <div className="flex-grow"></div>
+    </div>
+      <Footer/>
     </BrowserRouter>
   </StrictMode>,
 )

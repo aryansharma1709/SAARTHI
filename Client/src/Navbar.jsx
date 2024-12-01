@@ -69,20 +69,29 @@ export default function Navbar() {
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            {
-              isMentor && (
-                <div className="px-4 py-2 rounded">
-                  Monu Kumar
-                </div>
-              )
-            }
             {isLogged ? (
               <>
-                <div className="text-gray-700 px-4 py-2">
-                  {userName} 
-                  {/* TODO: ADD AVATAR  */}
-                </div>
-
+                <div className="flex items-center space-x-3 text-gray-700 px-4 py-2">
+      <div className="relative">
+        
+          <img 
+            src="https://tse3.mm.bing.net/th?id=OIP.EwG6x9w6RngqsKrPJYxULAHaHa&pid=Api&P=0&h=180" 
+            alt={`${userName}'s avatar`} 
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        
+        
+        <span className="absolute bottom-0 right-0 block w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+      </div>
+      <span className="font-medium">{userName}</span>
+    </div>
+              {
+                isMentor && (
+                  <span className="px-2 py-2 font-medium">
+                    Monu Kumar
+                  </span>
+                )
+              }
                 <button
                 onClick={handleLogout}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
